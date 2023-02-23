@@ -1,38 +1,29 @@
-const express=require('express')
-const {connection}=require("./config/db")
-const {noteRouter} = require('./routes/Note.route')
-const {userRouter}=require("./routes/User.route")
-const {authenticate}=require("./middlewares/authenticate.middleware")
-const cors=require("cors");
-
-const app=express()
-
-app.use(cors({
-    origin:"*"
-}))
-app.use(express.json())
+const express=require("express");
+const { connection } = require("./configs/db");
+const { bookroute } = require("./Routes/bookingroute");
+const { flightRouter } = require("./Routes/flightroute");
+const { userRouter } = require("./Routes/userroute");
+const app=express();
+app.use(express.json());
 
 app.get("/",(req,res)=>{
-    res.send("Welcome to home page")
+    res.send("welcome home")
 })
-
-app.use("/user",userRouter)
-app.use(authenticate)
-app.use("/notes",noteRouter)
-
-
-
-app.listen(3500,async()=>{
+app.use("/",userRouter)
+app.use("/",flightRouter)
+app.use("/",bookroute)
+app.listen("3400",async()=>{
     try{
-await connection;
-console.log("port is running on 3500")
+        await connection
+        console.log("connect to db")
     }
     catch(err){
-        console.log("error while connectiog to mongo")
-        console.log(err)
+        console.log("unable to connnect to database")
     }
-    
+    console.log("server is running on port 3400")
 })
-
-
-// 63c067554ee7d072cadc81cd
+// {
+//     "name":"sonia",
+//     "email":"soniasaini@gmail.com",
+//     "password":"12345"
+//   }
