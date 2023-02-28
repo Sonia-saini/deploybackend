@@ -14,10 +14,10 @@ require("dotenv").config();
 
 const postRouter = express.Router();
 postRouter.use("/post",async(req,res)=>{
-    // let {name,description,postedAt,price,image,location}=req.body;
+    let {name,description,postedAt,price,image,location}=req.body;
 
 try{
-let post=new Postmodel(req.body);
+let post=new Postmodel({name,description,postedAt,price,image,location});
 await post.save();
 res.send({msg:"posted data",data:post})
 }
