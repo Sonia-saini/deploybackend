@@ -35,6 +35,19 @@ console.log(filter)
 
 res.send(data)
 }
+else if(sort){
+    if(sort==="desc"){
+    const data=await Postmodel.find({category:filter}).limit(limit).skip(page*limit).sort({postedAt:-1})
+    console.log(filter)
+    
+    res.send(data)  }
+    else{
+        const data=await Postmodel.find({category:filter}).limit(limit).skip(page*limit).sort({postedAt:1})
+        console.log(filter)
+        
+        res.send(data)    
+    } 
+}
 else{
     if(q){
         const data=await Postmodel.find({name:q}).limit(limit).skip(page*limit)
