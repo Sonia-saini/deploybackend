@@ -6,7 +6,7 @@ const userschema=mongoose.Schema({
   category:String,
   location:String,
   postedAt:String,
-  price:Number,
+  price:String,
 })
 const Postmodel=mongoose.model("post",userschema);
 module.exports={Postmodel}
