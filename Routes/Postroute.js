@@ -9,7 +9,7 @@ const { Postmodel } = require("../Models/Usermodel");
 
 
 
-require("dotenv").config();
+
 
 
 const postRouter = express.Router();
@@ -19,7 +19,7 @@ postRouter.use("/post",async(req,res)=>{
 try{
 let post=new Postmodel({name,description,postedAt,price,image,location});
 await post.save();
-res.send({msg:"posted data",data:post})
+res.send({data:post})
 }
 catch(err){
     res.send("post classify have error")
