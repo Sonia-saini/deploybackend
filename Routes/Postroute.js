@@ -27,6 +27,7 @@ catch(err){
 })
 postRouter.get("/browse",async(req,res)=>{
    const {filter,q,limit,page,sort}=req.query;
+//    console.log(sort)
 try{
     
  if(filter){
@@ -37,8 +38,11 @@ res.send(data)
 }
 else if(sort){
     if(sort==="desc"){
-    const data=await Postmodel.find({category:filter}).limit(limit).skip(page*limit).sort({postedAt:-1})
-    console.log(filter)
+    const data=await Postmodel.find({category:filter}).limit(limit).skip(page*limit).sort({postedAt:-1});
+    
+
+    
+    console.log(data,sort)
     
     res.send(data)  }
     else{
