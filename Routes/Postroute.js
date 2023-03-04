@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 const { Usermodel } = require("../Models/Usermodel");
 const { registerValidator } = require("../middlewares/registervalidate");
 const { loginValidator } = require("../middlewares/loginvalidate");
-require("dotenv").config();
+// require("dotenv").config();
 
 
 const userRouter = express.Router();
