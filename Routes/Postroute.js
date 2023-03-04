@@ -1,81 +1,58 @@
 const express = require("express");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const { Usermodel } = require("../Models/Usermodel");
+const { registerValidator } = require("../middlewares/registervalidate");
+const { loginValidator } = require("../middlewares/loginvalidate");
+require("dotenv").config();
 
 
-const { Postmodel } = require("../Models/Usermodel");
+const userRouter = express.Router();
 
+userRouter.post("/signup", registerValidator, async (req, res) => {
+  const {  email, password } = req.body;
+  try {
+    bcrypt.hash(password, 8, async (err, password) => {
+      if (err) {
+        console.log(err);
+      } else {
+        const user = new Usermodel({
+         
+            
+          email,
+          password: password,
+        });
+        await user.save();
+      }
+    });
+  } catch (error) {
+    console.log("Some Error occurred, unable to Register.");
+    console.log(error);
+  }
+  res.status(201).send("Registration Successful");
+});
 
+userRouter.post("/login", loginValidator, async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    const user = await Usermodel.find({ email });
+    const hashed_password = user[0].password;
+    if (user.length > 0) {
+      bcrypt.compare(password, hashed_password, (err, result) => {
+        if (result) {
+          const token = jwt.sign({ userID: user[0]._id }, process.env.key, {
+            expiresIn: "1h",
+          });
+          res.status(201).send({ msg: "Login Successful", token: token ,user:user});
+        } else {
+          res.status(400).send("Wrong credentials, please try again.");
+        }
+      });
+    }
+  } catch (error) {
+    console.log("Some Error occurred, unable to Login.");
+    console.log(error);
+  }
+});
 
-
-
-
-
-
-
-
-const postRouter = express.Router();
-postRouter.use("/post",async(req,res)=>{
-    let {name,description,postedAt,price,image,location}=req.body;
-
-try{
-let post=new Postmodel({name,description,postedAt,price,image,location});
-await post.save();
-res.send({data:post})
-}
-catch(err){
-    res.send("post classify have error")
-}
-})
-postRouter.get("/browse",async(req,res)=>{
-   const {filter,q,limit,page,sort}=req.query;
-//    console.log(sort)
-try{
-    
- if(filter){
-const data=await Postmodel.find({category:filter}).limit(limit).skip(page*limit)
-console.log(filter)
-
-res.send(data)
-}
-else if(sort){
-    if(sort==="desc"){
-    const data=await Postmodel.find({category:filter}).limit(limit).skip(page*limit).sort({postedAt:-1});
-    
-
-    
-    console.log(data,sort)
-    
-    res.send(data)  }
-    else{
-        const data=await Postmodel.find({category:filter}).limit(limit).skip(page*limit).sort({postedAt:1})
-        console.log(filter)
-        
-        res.send(data)    
-    } 
-}
-else{
-    if(q){
-        const data=await Postmodel.find({name:q}).limit(limit).skip(page*limit)
-        res.send(data)
-    }else{
-    const data=await Postmodel.find().limit(limit).skip(page*limit)
-    res.send(data)}
-}
-
-}
-catch(err){
-    res.send("browse classified have error")
-}
-})
-postRouter.delete("/delete/:id",async(req,res)=>{
-    const {id}=req.params;
-try{
-let data=await Postmodel.findByIdAndDelete({_id:id})
-res.send({msg:`deleted id ${id}`})
-}
-catch(err){
-    res.send("delete have some error")
-}
-})
-module.exports={postRouter}
-
-
+module.exports = { userRouter };

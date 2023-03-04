@@ -1,7 +1,7 @@
 const express=require("express");
 const { connection } = require("./configs/db");
 const cors=require("cors");
-const { postRouter } = require("./Routes/Postroute");
+const {  userRouter } = require("./Routes/Postroute");
 
 
 
@@ -12,7 +12,7 @@ app.use(express.json());
 app.get("/",(req,res)=>{
     res.send("welcome homepage")
 })
-app.use("/",postRouter)
+app.use("/",userRouter)
 
 
 app.listen("3400",async()=>{
