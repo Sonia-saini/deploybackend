@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 const { Usermodel } = require("../Models/Usermodel");
 const { registerValidator } = require("../middlewares/registervalidate");
 const { loginValidator } = require("../middlewares/loginvalidate");
-// require("dotenv").config();
+require("dotenv").config();
 
 
 const userRouter = express.Router();
@@ -16,13 +16,24 @@ userRouter.post("/signin", registerValidator, async (req, res) => {
       if (err) {
         console.log(err);
       } else {
+        let x=email.split("@");
+        if(x[1]==="masaischool.com"){
         const user = new Usermodel({
-         
-           fullname, 
+         admin:true,
+          fullname,  
           email,
           password: password,
         });
-        await user.save();
+        await user.save();}
+        else{
+          const user = new Usermodel({
+            admin:false,
+             fullname,  
+             email,
+             password: password,
+           });
+           await user.save();
+        }
       }
     });
   } catch (error) {
@@ -40,10 +51,10 @@ userRouter.post("/login", loginValidator, async (req, res) => {
     if (user.length > 0) {
       bcrypt.compare(password, hashed_password, (err, result) => {
         if (result) {
-          const token = jwt.sign({ userID: user[0]._id }, "backend", {
+          const token = jwt.sign({ userID: user[0]._id }, process.env.key, {
             expiresIn: "1h",
           });
-          res.status(201).send({ msg: "Login Successful", token: token ,user:user});
+          res.status(201).send({ msg: "Login Successful", token: token,user:user });
         } else {
           res.status(400).send("Wrong credentials, please try again.");
         }
@@ -54,5 +65,7 @@ userRouter.post("/login", loginValidator, async (req, res) => {
     console.log(error);
   }
 });
+
+
 
 module.exports = { userRouter };
