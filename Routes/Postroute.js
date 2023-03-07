@@ -9,8 +9,8 @@ const { loginValidator } = require("../middlewares/loginvalidate");
 
 const userRouter = express.Router();
 
-userRouter.post("/signup", registerValidator, async (req, res) => {
-  const {  email, password } = req.body;
+userRouter.post("/signin", registerValidator, async (req, res) => {
+  const {  email, password ,fullname} = req.body;
   try {
     bcrypt.hash(password, 8, async (err, password) => {
       if (err) {
@@ -18,7 +18,7 @@ userRouter.post("/signup", registerValidator, async (req, res) => {
       } else {
         const user = new Usermodel({
          
-            
+           fullname, 
           email,
           password: password,
         });

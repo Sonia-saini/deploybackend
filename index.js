@@ -2,6 +2,7 @@ const express=require("express");
 const { connection } = require("./configs/db");
 const cors=require("cors");
 const {  userRouter } = require("./Routes/Postroute");
+const { Jobroute } = require("./Routes/Jobroute");
 
 
 
@@ -13,6 +14,7 @@ app.get("/",(req,res)=>{
     res.send("welcome homepage")
 })
 app.use("/",userRouter)
+app.use("/",Jobroute)
 
 
 app.listen("3400",async()=>{

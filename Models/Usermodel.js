@@ -2,6 +2,8 @@ const mongoose=require("mongoose");
 const userschema=mongoose.Schema({
     email: String,
  password: String,
+ fullname:String,
+ admin:Boolean
   
  
 })
