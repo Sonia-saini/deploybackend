@@ -1,30 +1,24 @@
 const express=require("express");
-const { connection } = require("./configs/db");
 const cors=require("cors");
-const {  userRouter } = require("./Routes/Postroute");
-const { Jobroute } = require("./Routes/Jobroute");
+const { connection } = require("./config/db");
+const { userRouter } = require("./Routes/UserRoute");
+const authentication = require("./Middlewares/authentication");
+require("dotenv").config();
 
-
-
-const app=express();
-app.use(cors())
-app.use(express.json());
-
-app.get("/",(req,res)=>{
-    res.send("welcome homepage")
+let app=express();
+app.use(cors());
+app.use(express.json())
+app.get("/",authentication,(req,res)=>{
+    res.send("welcome pococare")
 })
 app.use("/",userRouter)
-app.use("/",Jobroute)
-
-
-app.listen("3400",async()=>{
+app.listen(process.env.PORT,async()=>{
     try{
-        await connection
-        console.log("connect to db")
+await connection
+console.log("db is connected")
     }
     catch(err){
-        console.log("unable to connnect to database")
+        console.log("db connection have error")
     }
-    console.log("server is running on port 3400")
+    console.log(`server is running on port ${process.env.PORT}`)
 })
-
