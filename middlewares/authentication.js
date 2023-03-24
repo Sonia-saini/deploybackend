@@ -1,6 +1,6 @@
 const { Usermodel } = require("../Models/Usermodel");
 
-require("dotenv").config();
+// require("dotenv").config();
 
 const jwt = require('jsonwebtoken');
 
@@ -13,7 +13,7 @@ console.log(token,process.env.key)
         return res.status(401).send({ message: "Token not found" });
     }
     try {
-        const verify = jwt.verify(token, process.env.key);
+        const verify = jwt.verify(token, "secret");
         console.log(verify)
         const user = await Usermodel.findOne({_id:verify.userID});
         if (user) {

@@ -51,12 +51,12 @@ userRouter.post("/login",loginValidator, async (req, res) => {
       console.log(user,"login id",user[0]._id)
       var token = jwt.sign(
         {userID: user[0]._id},
-        process.env.key,
+        "secret",
         { expiresIn: "24h" }
       );
       var refreshToken = jwt.sign(
         {userID: user[0]._id},
-        process.env.REFRESHKEY,
+        "REFRESHKEY",
         { expiresIn: "48h" }
       );
       res.status(200).send({
@@ -76,12 +76,12 @@ userRouter.post("/refresh", async (req, res) => {
     if (!refreshToken) {
       return res.status(401).send("unauthorized");
     }
-    const verification = jwt.verify(refreshToken, process.env.REFRESHKEY);
+    const verification = jwt.verify(refreshToken, "REFRESHKEY");
     console.log(verification)
     if (verification){
       var newToken = jwt.sign(
         { userID: verification.userID},
-        process.env.key,
+        "secret",
         { expiresIn: "7 days" }
       );
     }
