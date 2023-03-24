@@ -6,8 +6,8 @@ const authentication = require("./Middlewares/authentication");
 // require("dotenv").config();
 
 let app=express();
-app.use(cors());
 app.use(express.json())
+app.use(cors());
 app.get("/",authentication,(req,res)=>{
     res.send("welcome pococare")
 })
