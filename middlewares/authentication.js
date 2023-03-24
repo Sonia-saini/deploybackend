@@ -8,7 +8,7 @@ const jwt = require('jsonwebtoken');
 const authentication = async (req, res, next) => {
     let token = req.headers.token;
 
-console.log(token,process.env.key)
+
     if (!token) {
         return res.status(401).send({ message: "Token not found" });
     }
